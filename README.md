@@ -3,7 +3,7 @@
 
 A skeleton package, to be used as a starting point when implementing a descriptive study.
 
-* sample protocol template (https://github.com/Sigfried/HivDescriptive/blob/master/docs/HIV_protocol.docx?raw=true).
+* sample [protocol template](documents/Protocol.docx?raw=true).
 
 # Development status
 

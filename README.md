@@ -1,10 +1,9 @@
-A Package Skeleton for Comparative Effectiveness Studies
-========================================================
+# A Package Skeleton for Descriptive Studies
 
-A skeleton package, to be used as a starting point when implementing comprative effect studies.
 
-* Vignette: [Using the package skeleton for comparative effectiveness studies](https://github.com/OHDSI/SkeletonComparativeEffectStudy/raw/master/inst/doc/UsingSkeletonPackage.pdf)
-* Vignette: [Comparative effectiveness studies data model](https://github.com/OHDSI/SkeletonComparativeEffectStudy/raw/master/inst/doc/DataModel.pdf)
+A skeleton package, to be used as a starting point when implementing a descriptive study.
+
+* sample protocol template (https://github.com/Sigfried/HivDescriptive/blob/master/docs/HIV_protocol.docx?raw=true).
 
 # Development status
 

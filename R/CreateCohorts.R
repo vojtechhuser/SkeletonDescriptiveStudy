@@ -14,27 +14,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-.createCohorts <- function(connection,
+.createCohorts <- function(packageName='mypackage',
+                           connection,
                            cdmDatabaseSchema,
                            vocabularyDatabaseSchema = cdmDatabaseSchema,
                            cohortDatabaseSchema,
                            cohortTable,
                            oracleTempSchema,
                            outputFolder) {
-  
+
   # Create study cohort table structure:
   sql <- SqlRender::loadRenderTranslateSql(sqlFilename = "CreateCohortTable.sql",
-                                           packageName = "SkeletonDescriptiveStudy",
+                                           packageName = packageName,
                                            dbms = attr(connection, "dbms"),
                                            oracleTempSchema = oracleTempSchema,
                                            cohort_database_schema = cohortDatabaseSchema,
                                            cohort_table = cohortTable)
   DatabaseConnector::executeSql(connection, sql, progressBar = FALSE, reportOverallTime = FALSE)
-  
-  
-  
+
+
+
   # Instantiate cohorts:
-  pathToCsv <- system.file("settings", "CohortsToCreate.csv", package = "SkeletonDescriptiveStudy")
+  pathToCsv <- system.file("settings", "CohortsToCreate.csv", package = packageName)
   cohortsToCreate <- read.csv(pathToCsv)
   for (i in 1:nrow(cohortsToCreate)) {
     writeLines(paste("Creating cohort:", cohortsToCreate$name[i]))
@@ -44,25 +45,25 @@
                                              oracleTempSchema = oracleTempSchema,
                                              cdm_database_schema = cdmDatabaseSchema,
                                              vocabulary_database_schema = vocabularyDatabaseSchema,
-                                                
+
                                              target_database_schema = cohortDatabaseSchema,
                                              target_cohort_table = cohortTable,
                                              target_cohort_id = cohortsToCreate$cohortId[i])
     DatabaseConnector::executeSql(connection, sql)
   }
-  
+
   # Fetch cohort counts:
-  sql <- "SELECT cohort_definition_id, COUNT(*) AS count FROM @cohort_database_schema.@cohort_table GROUP BY cohort_definition_id"
-  sql <- SqlRender::render(sql,
-                           cohort_database_schema = cohortDatabaseSchema,
-                           cohort_table = cohortTable)
-  sql <- SqlRender::translate(sql, targetDialect = attr(connection, "dbms"))
-  counts <- DatabaseConnector::querySql(connection, sql)
-  names(counts) <- SqlRender::snakeCaseToCamelCase(names(counts))
-  counts <- merge(counts, data.frame(cohortDefinitionId = cohortsToCreate$cohortId,
-                                     cohortName  = cohortsToCreate$name))
-  write.csv(counts, file.path(outputFolder, "CohortCounts.csv"))
-  
-  
+  # sql <- "SELECT cohort_definition_id, COUNT(*) AS count FROM @cohort_database_schema.@cohort_table GROUP BY cohort_definition_id"
+  # sql <- SqlRender::render(sql,
+  #                          cohort_database_schema = cohortDatabaseSchema,
+  #                          cohort_table = cohortTable)
+  # sql <- SqlRender::translate(sql, targetDialect = attr(connection, "dbms"))
+  # counts <- DatabaseConnector::querySql(connection, sql)
+  # names(counts) <- SqlRender::snakeCaseToCamelCase(names(counts))
+  # counts <- merge(counts, data.frame(cohortDefinitionId = cohortsToCreate$cohortId,
+  #                                    cohortName  = cohortsToCreate$name))
+  # write.csv(counts, file.path(outputFolder, "CohortCounts.csv"))
+  #
+
 }
 

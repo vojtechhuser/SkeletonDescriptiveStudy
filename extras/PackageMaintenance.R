@@ -37,7 +37,20 @@ rmarkdown::render("vignettes/DataModel.Rmd",
                                           number_sections = TRUE))
 
 # Insert cohort definitions from ATLAS into package -----------------------
+
+#create cohorts on Atlas
+#create a file with cohort IDS and write it to inst/settings/cohortsToCreate.csv
 #enf had to be set, but works with Martijn code
+
+#declare packages that you will utilize
+library(devtools)
+use_package('DatabaseConnector')
+use_package('SqlRender')
+use_package('SqlRender')
+use_package('ParallelLogger')
+
+#fetch sql code for cohorts
+
 Sys.setenv(baseUrl='http://18.213.176.21:80/WebAPI')
 OhdsiRTools::insertCohortDefinitionSetInPackage(fileName = "CohortsToCreate.csv",
                                                 baseUrl = Sys.getenv("baseUrl"),

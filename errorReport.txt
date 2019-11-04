@@ -2,8 +2,8 @@ DBMS:
 postgresql
 
 Error:
-org.postgresql.util.PSQLException: ERROR: column de.drug_exposure_id does not exist
-  Position: 1131
+org.postgresql.util.PSQLException: ERROR: syntax error at or near ")"
+  Position: 681
 
 SQL:
 CREATE TEMP TABLE qualified_events
@@ -19,24 +19,10 @@ FROM
          OP.observation_period_start_date as op_start_date, OP.observation_period_end_date as op_end_date, cast(E.visit_occurrence_id as bigint) as visit_occurrence_id
   FROM 
   (
-  -- Begin Drug Exposure Criteria
-select C.person_id, C.drug_exposure_id as event_id, C.drug_exposure_start_date as start_date,
-       COALESCE(C.drug_exposure_end_date, (C.drug_exposure_start_date + 1*INTERVAL'1 day')) as end_date, C.drug_concept_id as TARGET_CONCEPT_ID, C.visit_occurrence_id,
-       C.drug_exposure_start_date as sort_date
-from 
-(
-  select de.* , row_number() over (PARTITION BY de.person_id ORDER BY de.drug_exposure_start_date, de.drug_exposure_id) as ordinal
-  FROM gpc.DRUG_EXPOSURE de
-JOIN Codesets codesets on ((de.drug_concept_id = codesets.concept_id and codesets.codeset_id = 0))
-) C
-
-WHERE C.drug_exposure_start_date < TO_DATE(TO_CHAR(2012,'0000')||'-'||TO_CHAR(02,'00')||'-'||TO_CHAR(01,'00'), 'YYYY-MM-DD')
-AND C.ordinal = 1
--- End Drug Exposure Criteria
-
+  
   ) E
-	JOIN gpc.observation_period OP on E.person_id = OP.person_id and E.start_date >=  OP.observation_period_start_date and E.start_date <= op.observation_period_end_date
-  WHERE (OP.OBSERVATION_PERIOD_START_DATE + 365*INTERVAL'1 day') <= E.START_DATE AND (E.START_DATE + 90*INTERVAL'1 day') <= OP.OBSERVATION_PERIOD_END_DATE
+	JOIN onek.observation_period OP on E.person_id = OP.person_id and E.start_date >=  OP.observation_period_start_date and E.start_date <= op.observation_period_end_date
+  WHERE (OP.OBSERVATION_PERIOD_START_DATE + 0*INTERVAL'1 day') <= E.START_DATE AND (E.START_DATE + 0*INTERVAL'1 day') <= OP.OBSERVATION_PERIOD_END_DATE
 ) P
 WHERE P.ordinal = 1
 -- End Primary Events
@@ -71,8 +57,6 @@ Attached base packages:
 
 Other attached packages:
 - DatabaseConnector (2.4.1)
-- devtools (2.2.1)
-- usethis (1.5.1)
 - SkeletonDescriptiveStudy (0.1.0)
 - magrittr (1.5)
 - forcats (0.4.0)

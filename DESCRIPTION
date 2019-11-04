@@ -12,4 +12,8 @@ LazyData: true
 Imports: 
     DatabaseConnector,
     SqlRender,
-    ParallelLogger
+    ParallelLogger,
+    RJSONIO,
+    httr,
+    stringr,
+    OhdsiRTools

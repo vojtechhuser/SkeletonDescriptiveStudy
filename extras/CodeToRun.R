@@ -7,7 +7,7 @@ options(fftempdir = "c:/b/FFtemp")
 maxCores <- parallel::detectCores()
 
 # The folder where the study intermediate and result files will be written:
-outputFolder <- "c:/b"
+outputFolder <- "c:/b/a"
 
 #load env variables
 source('~/secret/conn.R')
@@ -25,7 +25,7 @@ cdmDatabaseSchema <- schema
 
 # The name of the database schema and table where the study-specific cohorts will be instantiated:
 cohortDatabaseSchema <- "gpc_results"
-cohortTable <- "huserv_desciptive2"
+cohortTable <- "huserv_desciptive3"
 
 # Some meta-information that will be used by the export function:
 databaseId <- "dbid"
@@ -39,10 +39,15 @@ oracleTempSchema <- NULL
 #end of params
 
 #draft of execute function
+packageName='SkeletonDescriptiveStudy'
+pathToCsv <- system.file("settings", "CohortsToCreate.csv", package = packageName)
+cohortsToCreate <- read.csv(pathToCsv)
+cohortsToCreate
+
 
 conn <- DatabaseConnector::connect(connectionDetails)
 
-.createCohorts(packageName='SkeletonDescriptiveStudy',
+SkeletonDescriptiveStudy:::.populateCohorts(packageName='SkeletonDescriptiveStudy',
          connection = conn,
                cdmDatabaseSchema = cdmDatabaseSchema,
                cohortDatabaseSchema = cohortDatabaseSchema,
@@ -51,6 +56,8 @@ conn <- DatabaseConnector::connect(connectionDetails)
                outputFolder = outputFolder)
 
 disconnect(conn)
+
+
 
 #
 #

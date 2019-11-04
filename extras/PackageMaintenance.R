@@ -48,6 +48,10 @@ use_package('DatabaseConnector')
 use_package('SqlRender')
 use_package('SqlRender')
 use_package('ParallelLogger')
+use_package('RJSONIO')
+use_package('httr')
+use_package('stringr')
+use_package('OhdsiRTools')
 
 #fetch sql code for cohorts
 

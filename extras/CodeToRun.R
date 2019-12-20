@@ -93,3 +93,44 @@ disconnect(conn)
 # prepareForEvidenceExplorer(resultsZipFile = resultsZipFile, dataFolder = dataFolder)
 #
 # launchEvidenceExplorer(dataFolder = dataFolder, blind = TRUE, launch.browser = FALSE)
+
+
+
+
+#running on Eunomia
+
+#setup
+ library(Eunomia)
+ connectionDetails<-Eunomia::getEunomiaConnectionDetails()
+ cdmDatabaseSchema <-'main'
+ resultsDatabaseSchema <-'main' #at most sites this likely will not be the same as cdmDatabaseSchema
+ vocabularyDatabaseSchema=cdmDatabaseSchema
+ cohortDatabaseSchema=resultsDatabaseSchema
+ cohortTable='cohort'
+
+#fetch from DEMO ! server here #http://atlas-demo.ohdsi.org
+definitionId=1772932 #any drug
+Sys.setenv(baseUrl='http://18.213.176.21:80/WebAPI')
+baseUrl = Sys.getenv("baseUrl")
+#load this manualy (will be in some package eventually) (grab as text from github if you need to)
+source('R/MoreOhdsiRTools.R')
+
+#http://atlas-demo.ohdsi.org/#/cohortdefinition/1772932
+
+
+connection <-connect(connectionDetails)
+
+#sanity check
+#(tables<-getTableNames(connection,cdmDatabaseSchema))
+
+#calling of new help function developed by Vojtech Huser
+res<-.executeExternalCohort(definitionId,connection,cdmDatabaseSchema,cohortDatabaseSchema,vocabularyDatabaseSchema
+                            ,cohortTable,baseUrl,createCohortTable = TRUE )
+
+#another new help function
+.fetchCohortCounts(connection)
+
+#on screen will be size of the cohort in your dataset
+
+
+DatabaseConnector::disconnect(connection)

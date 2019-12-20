@@ -109,7 +109,7 @@ disconnect(conn)
  cohortTable='cohort'
 
 #fetch from DEMO ! server here #http://atlas-demo.ohdsi.org
-definitionId=1772932 #any drug
+definitionId=1772932 #enter your favorite definition you created a second ago on public server
 Sys.setenv(baseUrl='http://18.213.176.21:80/WebAPI')
 baseUrl = Sys.getenv("baseUrl")
 #load this manualy (will be in some package eventually) (grab as text from github if you need to)

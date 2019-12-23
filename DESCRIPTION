@@ -16,4 +16,5 @@ Imports:
     RJSONIO,
     httr,
     stringr,
-    OhdsiRTools
+    OhdsiRTools,
+    FeatureExtraction

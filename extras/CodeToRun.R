@@ -23,9 +23,13 @@ connectionDetails <- DatabaseConnector::createConnectionDetails(dbms = Sys.geten
 # The name of the database schema where the CDM data can be found:
 cdmDatabaseSchema <- schema
 
+
 # The name of the database schema and table where the study-specific cohorts will be instantiated:
-cohortDatabaseSchema <- "gpc_results"
-cohortTable <- "huserv_desciptive3"
+resultsDatabaseSchema<- "onek_results"
+cohortDatabaseSchema <- resultsDatabaseSchema
+vocabularyDatabaseSchema <-'vocab'
+cohortTable <- "cohort"
+workFolder='c:/temp/'
 
 # Some meta-information that will be used by the export function:
 databaseId <- "dbid"
@@ -109,7 +113,10 @@ disconnect(conn)
  cohortTable='cohort'
 
 #fetch from DEMO ! server here #http://atlas-demo.ohdsi.org
-definitionId=1772932 #enter your favorite definition you created a second ago on public server
+definitionId=1772932 #
+definitionId=1772332 #male with any visit
+definitionId=1772839 #any drug
+definitionId=1772851 #ckd
 Sys.setenv(baseUrl='http://18.213.176.21:80/WebAPI')
 baseUrl = Sys.getenv("baseUrl")
 #load this manualy (will be in some package eventually) (grab as text from github if you need to)
@@ -127,10 +134,21 @@ connection <-connect(connectionDetails)
 res<-.executeExternalCohort(definitionId,connection,cdmDatabaseSchema,cohortDatabaseSchema,vocabularyDatabaseSchema
                             ,cohortTable,baseUrl,createCohortTable = TRUE )
 
+connectionDetails2<-.createConnectionDetails2(cdmDatabaseSchema = cdmDatabaseSchema
+                                              ,cohortDatabaseSchema=cohortDatabaseSchema
+                                              ,cohortTable = cohortTable
+                                              ,workFolder = workFolder )
+
 #another new help function
-.fetchCohortCounts(connection)
+c<-.fetchCohortCounts(connection,connectionDetails2 = connectionDetails2 )
+c
+
+.runCohortCharacterization(connectionDetails = connectionDetails
+                           ,cdmDatabaseSchema = cdmDatabaseSchema
+                           ,cohortDatabaseSchema = cohortDatabaseSchema
+                           ,cohortTable = cohortTable
+                           ,cohortId = definitionId
+                           ,outputFolder = connectionDetails2$workFolder)
 
 #on screen will be size of the cohort in your dataset
-
-
 DatabaseConnector::disconnect(connection)

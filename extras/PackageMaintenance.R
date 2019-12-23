@@ -52,6 +52,7 @@ use_package('RJSONIO')
 use_package('httr')
 use_package('stringr')
 use_package('OhdsiRTools')
+use_package('FeatureExtraction')
 
 #fetch sql code for cohorts
 
